@@ -41,7 +41,34 @@
     .card-icon { font-size: 32px; margin-bottom: 16px; }
     .card-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
     .card-desc { font-size: 13px; color: #5a7090; line-height: 1.5; }
-    
+
+        .site-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      pointer-events: none; /* Supaya tidak mengganggu klik elemen lain */
+    }
+
+    .brand-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff; /* Teks warna putih */
+      letter-spacing: 1.5px;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .brand-logo::after {
+      content: ".";
+      color: #00e676; /* Titik warna hijau terang/neon */
+      font-size: 32px;
+      line-height: 0;
+    }
+
     .logout-btn {
       margin-top: 40px;
       background: none;
@@ -66,6 +93,10 @@
   </script>
 </head>
 <body>
+
+  <header class="site-header">
+  <div class="brand-logo">HRZ</div>
+</header>
 
 <div class="container">
   <div class="welcome-section">
