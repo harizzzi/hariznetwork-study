@@ -67,6 +67,33 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .hi-y{background:#1e1600;color:var(--yellow)}
 .hi-t{background:#001820;color:var(--teal)}
 
+.site-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      pointer-events: none; /* Supaya tidak mengganggu klik elemen lain */
+    }
+
+    .brand-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff; /* Teks warna putih */
+      letter-spacing: 1.5px;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .brand-logo::after {
+      content: ".";
+      color: #00e676; /* Titik warna hijau terang/neon */
+      font-size: 32px;
+      line-height: 0;
+    }
+    
 /* FUNCTION ROW */
 .func{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;font-size:13px}
 .func:last-child{margin-bottom:0}
@@ -117,6 +144,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </style>
 </head>
 <body>
+
+  <header class="site-header">
+  <div class="brand-logo">HRZ</div>
+</header>
+
 <div class="page">
 
 <div class="banner">
