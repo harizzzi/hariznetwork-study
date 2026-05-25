@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Hariz Study System</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #06080e;
+      color: #b8cce0;
+      padding: 40px 20px;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    
+    .welcome-section { margin-bottom: 40px; }
+    .welcome-section h1 { color: #fff; font-size: 32px; font-weight: 800; margin-bottom: 6px; }
+    .welcome-section p { color: #5a7090; font-size: 16px; }
+    
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width: 600px) { .menu-grid { grid-template-columns: 1fr; } }
+    
+    .menu-card {
+      background: #0a0d16;
+      border: 1px solid #182030;
+      border-radius: 14px;
+      padding: 24px;
+      text-decoration: none;
+      color: #b8cce0;
+      transition: all 0.2s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .menu-card:hover {
+      border-color: #4da6ff;
+      transform: translateY(-2px);
+      background: #0e1220;
+    }
+    .card-icon { font-size: 32px; margin-bottom: 16px; }
+    .card-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .card-desc { font-size: 13px; color: #5a7090; line-height: 1.5; }
+    
+    .logout-btn {
+      margin-top: 40px;
+      background: none;
+      border: 1px solid #ff5252;
+      color: #ff5252;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .logout-btn:hover { background: rgba(255,82,82,0.1); }
+  </style>
+  <script>
+    if (sessionStorage.getItem('hariz_auth_session') !== 'authenticated_true') {
+      window.location.replace('index.html');
+    }
+    function logout() {
+      sessionStorage.removeItem('hariz_auth_session');
+      window.location.replace('index.html');
+    }
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <div class="welcome-section">
+    <h1>Hi, Hariz</h1>
+    <p>What do you want to study today?</p>
+  </div>
+
+  <div class="menu-grid">
+    <a href="cheatsheet.html" class="menu-card">
+      <div>
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Last Minute Cheat Sheet</div>
+        <div class="card-desc">Metric & Availability Traps, MTBF, MTTR, dan pemahaman jenis-jenis DR Site (Hot, Warm, Cold).</div>
+      </div>
+    </a>
+
+        <a href="quiz.html" class="menu-card">
+      <div>
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Quiz</div>
+        <div class="card-desc">Comptia network+ quiz </div>
+      </div>
+    </a>
+
+    <a href="natvlan.html" class="menu-card">
+      <div>
+        <div class="card-icon">🌐</div>
+        <div class="card-title">NAT/PAT & VLAN Note</div>
+        <div class="card-desc">Konsep Aliran Trafik PAT, Static NAT, pengasingan Switch, Trunk Port, Native VLAN, Voice VLAN, dan VXLAN.</div>
+      </div>
+    </a>
+
+    <a href="singkatan.html" class="menu-card">
+      <div>
+        <div class="card-icon">💾</div>
+        <div class="card-title">Singkatan Network+</div>
+        <div class="card-desc">Fungsi dan analogi mudah bagi topik Storage Area Network (SAN), NAS, IPAM, MIB, AAA Framework, dan SCADA.</div>
+      </div>
+    </a>
+  </div>
+
+  <button class="logout-btn" onclick="logout()">Keluar Sistem Keluar 📴</button>
+</div>
+
+</body>
+</html>

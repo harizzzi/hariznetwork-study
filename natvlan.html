@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faham NAT/PAT & VLAN — N10-009</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s1:#0c1018;--s2:#101520;--s3:#141b28;
+  --bd:#1c2535;--bd2:#253045;
+  --blue:#4da6ff;--bluedim:#0a1828;--bluebdr:#0f2540;
+  --green:#00e676;--greendim:#001a0a;--greenbdr:#003d18;
+  --orange:#ffab40;--orangedim:#150c00;--orangebdr:#3d2000;
+  --red:#ff5252;--reddim:#1a0808;--redbdr:#3d0f0f;
+  --purple:#ce93d8;--purpledim:#0f0818;--purplebdr:#2a1040;
+  --yellow:#ffd54f;--teal:#4dd0e1;--tealdim:#001a1f;
+  --text:#c0d0e0;--muted:#304560;--dim:#1e2e3e;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.5}
+.page{max-width:960px;margin:0 auto}
+
+/* ── BANNER ── */
+.banner{background:linear-gradient(135deg,#0a0f20,#06090f);border:1px solid #1e2a3e;border-radius:14px;padding:22px 26px;margin-bottom:22px}
+.banner h1{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.banner h1 span{color:var(--blue)}
+.banner p{font-size:12px;color:#2a4060;font-family:monospace}
+
+/* ── SECTION TITLE ── */
+.sec{margin-bottom:24px}
+.sec-hdr{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;font-family:monospace;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-hdr::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+/* ── ANALOGY BLOCK ── */
+.analogy{border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid}
+.analogy.blue{background:var(--bluedim);border-color:var(--bluebdr);border-left:3px solid var(--blue)}
+.analogy.green{background:var(--greendim);border-color:var(--greenbdr);border-left:3px solid var(--green)}
+.analogy.orange{background:var(--orangedim);border-color:var(--orangebdr);border-left:3px solid var(--orange)}
+.analogy.red{background:var(--reddim);border-color:var(--redbdr);border-left:3px solid var(--red)}
+.analogy.purple{background:var(--purpledim);border-color:var(--purplebdr);border-left:3px solid var(--purple)}
+.analogy.teal{background:var(--tealdim);border-color:#0f3040;border-left:3px solid var(--teal)}
+.analogy-title{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.analogy-body{font-size:13px;line-height:1.75;color:#9ab8d0}
+.analogy-body b{color:#c8e0f0;font-weight:600}
+.analogy-body .hi{padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px;font-weight:700}
+.hi-blue{background:#0d2040;color:var(--blue)}
+.hi-green{background:#002a10;color:var(--green)}
+.hi-orange{background:#201000;color:var(--orange)}
+.hi-red{background:#200a0a;color:var(--red)}
+.hi-purple{background:#180a28;color:var(--purple)}
+.hi-yellow{background:#201800;color:var(--yellow)}
+.hi-teal{background:#00181f;color:var(--teal)}
+
+/* ── DIAGRAM ── */
+.diagram{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:14px;overflow-x:auto}
+.diagram-title{font-size:10px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;justify-content:flex-start}
+.fbox{background:var(--s3);border:1px solid var(--bd2);border-radius:8px;padding:8px 12px;font-size:12px;text-align:center;min-width:90px}
+.fbox .label{font-size:10px;font-family:monospace;color:var(--muted);margin-bottom:3px}
+.fbox .val{font-family:monospace;font-weight:700;font-size:12px}
+.farrow{color:var(--muted);font-size:18px;padding:0 8px;flex-shrink:0}
+.farrow.changed{color:var(--orange)}
+.ftag{font-size:10px;color:var(--muted);margin-top:2px;font-style:italic}
+
+/* ── COMPARE TABLE ── */
+.ctbl{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px;border-radius:10px;overflow:hidden}
+.ctbl th{background:var(--s3);color:var(--muted);font-family:monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid var(--bd2)}
+.ctbl td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top;font-size:12.5px}
+.ctbl tr:last-child td{border-bottom:none}
+.ctbl tr:hover td{background:var(--s2)}
+.ctbl .key{font-family:monospace;font-weight:700;white-space:nowrap}
+
+/* ── TRAP BOX ── */
+.trap{background:var(--reddim);border:1px solid var(--redbdr);border-left:3px solid var(--red);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.trap-title{font-size:11px;font-weight:700;color:var(--red);font-family:monospace;letter-spacing:1px;margin-bottom:8px}
+.trap-row{display:flex;gap:8px;margin-bottom:6px;font-size:13px;align-items:flex-start}
+.trap-row:last-child{margin-bottom:0}
+.trap-k{color:var(--red);font-weight:700;font-family:monospace;white-space:nowrap;min-width:120px;flex-shrink:0}
+.trap-v{color:#d0a0a8;line-height:1.6}
+.trap-v b{color:#ffb0c0;font-weight:600}
+
+/* ── NOTE BOX ── */
+.note{background:var(--bluedim);border:1px solid var(--bluebdr);border-left:3px solid var(--blue);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.note-title{font-size:11px;font-weight:700;color:var(--blue);font-family:monospace;letter-spacing:1px;margin-bottom:8px}
+.note-row{display:flex;gap:8px;margin-bottom:6px;font-size:13px;align-items:flex-start}
+.note-row:last-child{margin-bottom:0}
+.note-k{color:var(--blue);font-weight:700;font-family:monospace;white-space:nowrap;min-width:120px;flex-shrink:0}
+.note-v{color:#90b8d8;line-height:1.6}
+.note-v b{color:#b0d0f0;font-weight:600}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
+
+/* ── VLAN CARD ── */
+.vcard{border-radius:12px;padding:16px;border:1px solid}
+.vcard.data{background:#050f18;border-color:#0f2540;border-top:3px solid var(--blue)}
+.vcard.voice{background:#050a18;border-color:#0a1540;border-top:3px solid var(--purple)}
+.vcard.native{background:#0a0f06;border-color:#1a2810;border-top:3px solid var(--green)}
+.vcard.mgmt{background:#100e05;border-color:#302810;border-top:3px solid var(--yellow)}
+.vcard.default{background:#0e0e0e;border-color:#282828;border-top:3px solid var(--muted)}
+.vcard.black{background:#100808;border-color:#301010;border-top:3px solid var(--red)}
+.vcard-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.vcard-id{font-family:monospace;font-size:11px;color:var(--muted);margin-bottom:10px}
+.vcard-body{font-size:12.5px;color:#8aaac0;line-height:1.65}
+.vcard-tip{margin-top:8px;font-size:11px;font-style:italic;color:var(--muted)}
+
+/* ── SWITCH DIAGRAM ── */
+.switch-diag{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:14px}
+.sd-title{font-size:10px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.port-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.port{border-radius:6px;padding:6px 10px;font-size:11px;font-family:monospace;font-weight:700;text-align:center;min-width:60px;border:1px solid}
+.port.access-data{background:#060f18;border-color:#0f2a40;color:var(--blue)}
+.port.access-voice{background:#060818;border-color:#0f1540;color:var(--purple)}
+.port.trunk{background:#0a0f06;border-color:#1a2810;color:var(--green)}
+.port.access-both{background:#080618;border-color:#180f40;color:#a080f0}
+.port-label{font-size:10px;color:var(--muted);text-align:center;margin-top:2px;font-family:monospace}
+.port-wrap{display:flex;flex-direction:column;align-items:center}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* ── SCENARIO BOX ── */
+.scenario{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.scenario-q{font-size:13px;color:#c8e0f0;margin-bottom:8px;font-style:italic}
+.scenario-a{font-size:13px;color:#80b8d8}
+.scenario-a b{color:var(--green);font-weight:700}
+.scenario-why{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ── DIV ── */
+.div{height:1px;background:var(--bd);margin:24px 0}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:20px 0 8px;font-size:11px;color:var(--dim);font-family:monospace}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- BANNER -->
+<div class="banner">
+  <h1>Faham Betul-Betul: <span>NAT/PAT</span> & <span style="color:var(--purple)">VLAN</span></h1>
+  <p>CompTIA N10-009 · Bukan sekadar hafal — faham konsep sebenar · 2 hari lagi</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BAHAGIAN 1: NAT & PAT
+══════════════════════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-hdr" style="color:var(--blue)">🔵 &nbsp;Bahagian 1 — NAT & PAT (Network/Port Address Translation)</div>
+
+  <!-- Kenapa perlu NAT? -->
+  <div class="analogy blue">
+    <div class="analogy-title" style="color:var(--blue)">🏠 &nbsp;Kenapa Kita Perlu NAT? — Analogi Rumah</div>
+    <div class="analogy-body">
+      Bayangkan kau tinggal dalam flat. Flat tu ada <b>satu alamat pos</b> je — contoh <span class="hi hi-orange">203.0.113.5</span>. Tapi dalam flat ada 10 bilik — setiap bilik ada <b>nombor bilik sendiri</b> seperti <span class="hi hi-blue">192.168.1.2</span>, <span class="hi hi-blue">192.168.1.3</span> dan sebagainya.<br><br>
+      Bila jiran luar hantar surat, dia hantar ke <span class="hi hi-orange">alamat flat (public IP)</span>. Penjaga flat (router) yang akan <b>forward surat ke bilik yang betul</b> berdasarkan siapa yang minta.<br><br>
+      Itulah NAT — <b>sorokkan banyak IP private di belakang satu IP public</b>.
+    </div>
+  </div>
+
+  <!-- Diagram asas NAT -->
+  <div class="diagram">
+    <div class="diagram-title">Cara NAT Berfungsi — Packet Keluar ke Internet</div>
+    <div class="flow" style="margin-bottom:12px">
+      <div class="fbox">
+        <div class="label">PC dalam LAN</div>
+        <div class="val" style="color:var(--blue)">192.168.1.10</div>
+        <div class="ftag">private IP</div>
+      </div>
+      <div class="farrow">→</div>
+      <div class="fbox" style="border-color:var(--orange);background:#100c02">
+        <div class="label">Router (NAT)</div>
+        <div class="val" style="color:var(--orange)">TRANSLATE</div>
+        <div class="ftag">tukar source IP</div>
+      </div>
+      <div class="farrow changed">→</div>
+      <div class="fbox">
+        <div class="label">Keluar ke Internet</div>
+        <div class="val" style="color:var(--orange)">203.0.113.5</div>
+        <div class="ftag">public IP</div>
+      </div>
+      <div class="farrow">→</div>
+      <div class="fbox" style="background:#001a0a;border-color:#003d18">
+        <div class="label">Server Google</div>
+        <div class="val" style="color:var(--green)">142.250.x.x</div>
+        <div class="ftag">nampak dari mana?</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);padding:8px 0">
+      ✅ Google nampak request datang dari <span style="color:var(--orange);font-family:monospace">203.0.113.5</span> — dia <b>tak tahu</b> PC private mana yang request.
+      Router simpan <b>NAT translation table</b> untuk tahu nak forward reply ke mana.
+    </div>
+  </div>
+
+  <!-- NAT vs PAT -->
+  <div class="analogy orange">
+    <div class="analogy-title" style="color:var(--orange)">📦 &nbsp;NAT vs PAT — Apa Beza?</div>
+    <div class="analogy-body">
+      <b>NAT (basic)</b> — map <b>satu IP private → satu IP public</b>. Contoh: 5 PC = perlu 5 IP public. Boros IP.<br><br>
+      <b>PAT (Port Address Translation)</b> — map <b>BANYAK IP private → SATU IP public</b>, bezakan menggunakan <b>nombor port</b>. Inilah yang rumah dan pejabat guna sekarang.<br><br>
+      PAT juga dipanggil <span class="hi hi-orange">NAT Overload</span> — sebab satu IP public di-"overload" untuk ramai user.
+    </div>
+  </div>
+
+  <!-- PAT diagram -->
+  <div class="diagram">
+    <div class="diagram-title">PAT — Banyak IP Private, Satu IP Public, Bezakan Guna Port</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+      <div class="flow">
+        <div class="fbox"><div class="label">PC 1</div><div class="val" style="color:var(--blue)">192.168.1.10</div><div class="ftag">port 50001</div></div>
+        <div class="farrow">→</div>
+        <div class="fbox" style="border-color:var(--orange);background:#100c02"><div class="label">Router PAT</div><div class="val" style="color:var(--orange)">203.0.113.5</div><div class="ftag">port 50001</div></div>
+        <div class="farrow">→</div>
+        <div class="fbox" style="background:#001a0a;border-color:#003d18"><div class="label">Internet</div><div class="val" style="color:var(--green)">→ Google</div></div>
+      </div>
+      <div class="flow">
+        <div class="fbox"><div class="label">PC 2</div><div class="val" style="color:var(--blue)">192.168.1.11</div><div class="ftag">port 50002</div></div>
+        <div class="farrow">→</div>
+        <div class="fbox" style="border-color:var(--orange);background:#100c02"><div class="label">Router PAT</div><div class="val" style="color:var(--orange)">203.0.113.5</div><div class="ftag">port 50002</div></div>
+        <div class="farrow">→</div>
+        <div class="fbox" style="background:#001a0a;border-color:#003d18"><div class="label">Internet</div><div class="val" style="color:var(--green)">→ YouTube</div></div>
+      </div>
+      <div class="flow">
+        <div class="fbox"><div class="label">PC 3</div><div class="val" style="color:var(--blue)">192.168.1.12</div><div class="ftag">port 50003</div></div>
+        <div class="farrow">→</div>
+        <div class="fbox" style="border-color:var(--orange);background:#100c02"><div class="label">Router PAT</div><div class="val" style="color:var(--orange)">203.0.113.5</div><div class="ftag">port 50003</div></div>
+        <div class="farrow">→</div>
+        <div class="fbox" style="background:#001a0a;border-color:#003d18"><div class="label">Internet</div><div class="val" style="color:var(--green)">→ Netflix</div></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted)">
+      Semua 3 PC guna IP public yang <b>sama</b> — tapi router bezakan reply guna <b>nombor port berbeza</b>.
+    </div>
+  </div>
+
+  <!-- Compare table -->
+  <table class="ctbl">
+    <tr><th>Aspek</th><th>NAT (Static/Dynamic)</th><th>PAT (NAT Overload)</th></tr>
+    <tr>
+      <td class="key" style="color:var(--muted)">Ratio</td>
+      <td>1 private IP → 1 public IP</td>
+      <td><b style="color:var(--green)">Banyak</b> private IP → <b style="color:var(--green)">1</b> public IP</td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--muted)">Cara bezakan</td>
+      <td>IP address</td>
+      <td><b>Port number</b> (source port berbeza tiap connection)</td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--muted)">Guna untuk</td>
+      <td>Server yang kena accessible dari luar</td>
+      <td><b>Kebanyakan network</b> — rumah, pejabat, semua guna PAT</td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--muted)">Nama lain</td>
+      <td>Static NAT / Dynamic NAT</td>
+      <td><b style="color:var(--orange)">NAT Overload</b>, Many-to-One NAT</td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--muted)">Exam soalan</td>
+      <td>"map internal IP to external IP" → <b style="color:var(--yellow)">NAT/VIP</b></td>
+      <td>"many devices share one public IP" → <b style="color:var(--orange)">PAT</b></td>
+    </tr>
+  </table>
+
+  <!-- Exam traps NAT/PAT -->
+  <div class="trap">
+    <div class="trap-title">⚠ NAT / PAT Exam Traps</div>
+    <div class="trap-row"><span class="trap-k">PAT vs NAT</span><span class="trap-v">"Many devices share <b>one</b> public IP" = <b>PAT</b>. "Map server internal to external" = <b>NAT (VIP)</b></span></div>
+    <div class="trap-row"><span class="trap-k">Non-routable</span><span class="trap-v">"Organization use PAT for non-routable addresses" = private IP (192.168.x.x) guna PAT untuk keluar internet</span></div>
+    <div class="trap-row"><span class="trap-k">Security side effect</span><span class="trap-v">NAT/PAT <b>sembunyikan</b> struktur internal network — ini bonus security tapi bukan tujuan utama</span></div>
+    <div class="trap-row"><span class="trap-k">VIP</span><span class="trap-v">Virtual IP — satu IP dikongsi untuk <b>redundancy</b> (FHRP) atau <b>load balancing</b>. Berbeza dari PAT.</span></div>
+  </div>
+
+  <!-- Scenario practice -->
+  <div style="margin-bottom:14px">
+    <div style="font-size:11px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">SCENARIO — TEST FAHAM KAU</div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "A company wants all 200 employees to share a single public IP address to access the internet." — Apa yang kena configure?</div>
+      <div class="scenario-a">→ <b>PAT (NAT Overload)</b></div>
+      <div class="scenario-why">Sebab: banyak private IP → satu public IP, bezakan guna port number.</div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "A firewall admin is mapping a server's internal IP 10.0.0.5 to external IP 203.0.113.10 for public access." — Apa function ni?</div>
+      <div class="scenario-a">→ <b>NAT (Static NAT / VIP)</b></div>
+      <div class="scenario-why">Sebab: satu-satu mapping, supaya orang luar boleh reach server dari luar.</div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "Which technology hides internal IP addresses from the internet?" — NAT atau PAT?</div>
+      <div class="scenario-a">→ <b>NAT</b> (broad answer) atau <b>PAT</b> jika context ramai users</div>
+      <div class="scenario-why">Kedua-dua sorokkan private IP. Tapi kalau ada "many devices" atau "single IP" dalam soalan → PAT.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BAHAGIAN 2: VLAN
+══════════════════════════════════════════════════════ -->
+<div class="div"></div>
+<div class="sec">
+  <div class="sec-hdr" style="color:var(--purple)">🟣 &nbsp;Bahagian 2 — VLAN (Virtual LAN)</div>
+
+  <!-- Kenapa VLAN? -->
+  <div class="analogy purple">
+    <div class="analogy-title" style="color:var(--purple)">🏢 &nbsp;Kenapa Kita Perlu VLAN? — Analogi Pejabat</div>
+    <div class="analogy-body">
+      Bayangkan satu pejabat besar — semua orang, Pemasaran, HR, IT, dan Kewangan, dalam satu bangunan dengan satu switch besar.<br><br>
+      <b>Tanpa VLAN:</b> semua orang dalam <b>satu network</b>. Orang Pemasaran boleh <i>cuba</i> akses fail Kewangan. Broadcast dari satu PC flood ke semua orang — perlahan, tak selamat.<br><br>
+      <b>Dengan VLAN:</b> walaupun fiziknya semua dalam satu switch, kita <b>wujudkan "dinding logik"</b> — Kewangan dalam VLAN 10, HR dalam VLAN 20, IT dalam VLAN 30. Mereka <b>tak nampak traffic antara satu sama lain</b> walaupun kabel dalam switch sama.<br><br>
+      VLAN = <span class="hi hi-purple">Partition logik dalam switch</span>. Fizik sama, tapi logik berasingan.
+    </div>
+  </div>
+
+  <!-- VLAN Types -->
+  <div style="font-size:11px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">JENIS-JENIS VLAN — FAHAM SETIAP SATU</div>
+
+  <div class="g3">
+    <div class="vcard data">
+      <div class="vcard-name" style="color:var(--blue)">Data VLAN</div>
+      <div class="vcard-id">Biasa: VLAN 10, 20, 30...</div>
+      <div class="vcard-body">
+        Untuk traffic biasa — PC, laptop, printer.<br><br>
+        Ini VLAN yang paling biasa. Setiap department ada Data VLAN sendiri.
+      </div>
+      <div class="vcard-tip">Bila dengar "VLAN" dalam soalan tanpa qualifier = biasanya Data VLAN.</div>
+    </div>
+    <div class="vcard voice">
+      <div class="vcard-name" style="color:var(--purple)">Voice VLAN</div>
+      <div class="vcard-id">Biasa: VLAN 100, 150...</div>
+      <div class="vcard-body">
+        Khas untuk <b>VoIP phones</b> sahaja.<br><br>
+        Kenapa kena asingkan? Supaya phone dapat <b>QoS priority</b> — kalau voice traffic bercampur data, suara jadi putus-putus (jitter).
+      </div>
+      <div class="vcard-tip">"Phone cannot receive calls" + port issues → check Voice VLAN assignment.</div>
+    </div>
+    <div class="vcard mgmt">
+      <div class="vcard-name" style="color:var(--yellow)">Management VLAN</div>
+      <div class="vcard-id">Biasa: VLAN 99, VLAN 1 (default)</div>
+      <div class="vcard-body">
+        Untuk <b>manage switch/router</b> — SSH, Telnet, SNMP, web GUI.<br><br>
+        Best practice: asingkan dari user traffic. Hadkan siapa boleh akses.
+      </div>
+      <div class="vcard-tip">Admin access ke switch patut guna dedicated Management VLAN.</div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="vcard native">
+      <div class="vcard-name" style="color:var(--green)">Native VLAN</div>
+      <div class="vcard-id">Default: VLAN 1 (tukar untuk security)</div>
+      <div class="vcard-body">
+        Traffic yang <b>tidak ada tag 802.1Q</b> pada trunk port akan masuk Native VLAN.<br><br>
+        Macam "VLAN default" untuk trunk — kalau frame tak ada label, masuk sini.
+      </div>
+      <div class="vcard-tip">VLAN hopping attack guna Native VLAN mismatch. Tukar dari VLAN 1!</div>
+    </div>
+    <div class="vcard default">
+      <div class="vcard-name" style="color:#888">Default VLAN</div>
+      <div class="vcard-id">Selalunya VLAN 1</div>
+      <div class="vcard-body">
+        VLAN yang semua port masuk <b>secara default</b> bila switch baru keluar dari kotak.<br><br>
+        Tak boleh delete VLAN 1. Tapi best practice — jangan guna untuk user traffic.
+      </div>
+      <div class="vcard-tip">Switch baru → semua port dalam VLAN 1. Kena reassign ke VLAN yang betul.</div>
+    </div>
+    <div class="vcard black">
+      <div class="vcard-name" style="color:var(--red)">Black Hole VLAN</div>
+      <div class="vcard-id">Biasa: VLAN 999 atau unused VLAN</div>
+      <div class="vcard-body">
+        VLAN "buangan" — port yang <b>tidak digunakan</b> dimasukkan sini dan disabled.<br><br>
+        Security measure — prevent unauthorized device dari connect ke unused port.
+      </div>
+      <div class="vcard-tip">"Disable unused switchports" → assign ke Black Hole VLAN.</div>
+    </div>
+  </div>
+
+  <!-- Port types -->
+  <div class="analogy teal">
+    <div class="analogy-title" style="color:var(--teal)">🔌 &nbsp;Access Port vs Trunk Port — Beza Penting</div>
+    <div class="analogy-body">
+      <b>Access Port</b> — port untuk <b>end device</b> (PC, printer, phone). Port ni hanya tahu <b>satu VLAN</b>. Frame yang masuk/keluar <b>tak ada VLAN tag</b> — device tak perlu tahu dia dalam VLAN mana.<br><br>
+      <b>Trunk Port</b> — port untuk <b>hubung switch ke switch</b> atau switch ke router. Port ni boleh bawa <b>banyak VLAN serentak</b>. Guna <span class="hi hi-teal">802.1Q tagging</span> untuk label setiap frame dengan VLAN ID dia.<br><br>
+      Analogi: Access port = jalan sehala masuk satu kawasan. Trunk port = lebuh raya yang bawa banyak jenis kenderaan, setiap kenderaan ada nombor plate (VLAN tag).
+    </div>
+  </div>
+
+  <!-- Switch diagram -->
+  <div class="switch-diag">
+    <div class="sd-title">Contoh Switch Configuration — Access vs Trunk Ports</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Satu switch dengan PC, VoIP phones, dan trunk ke switch lain</div>
+    <div class="port-row">
+      <div class="port-wrap">
+        <div class="port access-data">Gi0/1</div>
+        <div class="port-label">PC — VLAN 10</div>
+      </div>
+      <div class="port-wrap">
+        <div class="port access-data">Gi0/2</div>
+        <div class="port-label">PC — VLAN 10</div>
+      </div>
+      <div class="port-wrap">
+        <div class="port access-both">Gi0/3</div>
+        <div class="port-label">Phone+PC<br>VLAN 10+100</div>
+      </div>
+      <div class="port-wrap">
+        <div class="port access-both">Gi0/4</div>
+        <div class="port-label">Phone+PC<br>VLAN 10+100</div>
+      </div>
+      <div class="port-wrap">
+        <div class="port access-data" style="color:#c8a0ff;border-color:#2a1050;background:#0a0518">Gi0/5</div>
+        <div class="port-label">PC — VLAN 20<br>(HR dept)</div>
+      </div>
+      <div class="port-wrap">
+        <div class="port trunk">Gi0/24</div>
+        <div class="port-label">TRUNK ke<br>switch lain</div>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Access — Data VLAN</div>
+      <div class="leg"><div class="leg-dot" style="background:#a080f0"></div>Access — Data + Voice VLAN</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Trunk — semua VLAN</div>
+    </div>
+    <div style="margin-top:14px;font-family:monospace;font-size:12px;background:#080c14;border:1px solid var(--bd);border-radius:8px;padding:12px;color:#60a080;line-height:2">
+      <span style="color:var(--muted)">! Port PC biasa (access, data only)</span><br>
+      switchport mode access<br>
+      switchport access vlan 10<br>
+      <br>
+      <span style="color:var(--muted)">! Port phone + PC (access, voice + data)</span><br>
+      switchport mode access<br>
+      switchport access vlan 10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)">← data VLAN</span><br>
+      switchport voice vlan 100 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted)">← voice VLAN</span><br>
+      <br>
+      <span style="color:var(--muted)">! Trunk port ke switch lain</span><br>
+      switchport mode trunk<br>
+      switchport trunk allowed vlan 10,20,100
+    </div>
+  </div>
+
+  <!-- 802.1Q tagging -->
+  <div class="analogy blue">
+    <div class="analogy-title" style="color:var(--blue)">🏷 &nbsp;802.1Q Tagging — Macam Mana Tag Berfungsi</div>
+    <div class="analogy-body">
+      Bila frame masuk <b>trunk port</b>, switch <b>tambah tag 4-byte</b> dalam frame header — tag ni mengandungi <span class="hi hi-blue">VLAN ID (1–4094)</span>.<br><br>
+      Bila frame sampai switch lain, switch tu <b>baca tag</b>, tahu frame tu untuk VLAN mana, then <b>buang tag</b> sebelum forward ke access port.<br><br>
+      End device (PC, phone) <b>tak nampak tag langsung</b> — switch yang handle semua ni.<br><br>
+      <b>Native VLAN</b> = satu-satunya VLAN yang frame dia <b>tak kena tag</b> pada trunk port. Ini yang boleh menyebabkan VLAN hopping attack kalau misconfigured.
+    </div>
+  </div>
+
+  <!-- VLAN traps -->
+  <div class="trap">
+    <div class="trap-title">⚠ VLAN Exam Traps — Yang Selalu Keliru</div>
+    <div class="trap-row">
+      <span class="trap-k">Voice VLAN config</span>
+      <span class="trap-v">Port phone guna <b>access mode</b>, bukan trunk. Tambah <code style="background:#200a0a;padding:1px 5px;border-radius:3px;color:#ffa0b0">switchport voice vlan X</code> — port tu auto support 2 VLAN (data + voice).</span>
+    </div>
+    <div class="trap-row">
+      <span class="trap-k">PC + Phone satu port</span>
+      <span class="trap-v">PC connect ke phone, phone connect ke switch — satu port boleh handle <b>data VLAN + voice VLAN serentak</b>. Phone tag sendiri traffic dia.</span>
+    </div>
+    <div class="trap-row">
+      <span class="trap-k">Native VLAN mismatch</span>
+      <span class="trap-v">Dua switch trunk port kena ada <b>Native VLAN sama</b>. Kalau berbeza → <b>VLAN hopping</b> boleh berlaku.</span>
+    </div>
+    <div class="trap-row">
+      <span class="trap-k">SVI routing</span>
+      <span class="trap-v">Nak route antara VLAN kena ada Layer 3 switch atau router. <b>SVI (Switch Virtual Interface)</b> = logical interface untuk routing antara VLAN dalam L3 switch.</span>
+    </div>
+    <div class="trap-row">
+      <span class="trap-k">Workstation moved</span>
+      <span class="trap-v">"User moved to different area, can access internet but not server" → <b>Wrong VLAN assignment</b> pada port baru.</span>
+    </div>
+    <div class="trap-row">
+      <span class="trap-k">IP helper</span>
+      <span class="trap-v">DHCP request tak boleh cross VLAN boundary sendiri. Guna <b>IP helper address</b> pada router/L3 switch untuk forward DHCP request ke server lain subnet.</span>
+    </div>
+  </div>
+
+  <!-- Scenario VLAN -->
+  <div style="margin-bottom:14px">
+    <div style="font-size:11px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">SCENARIO — VLAN</div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "A VoIP phone is plugged into a port but cannot receive calls. The PC connected through the phone works fine." — Apa masalahnya?</div>
+      <div class="scenario-a">→ Port tu <b>tak ada Voice VLAN configured</b></div>
+      <div class="scenario-why">PC okay (Data VLAN ada) tapi phone tak dapat VLAN dia sendiri. Fix: tambah <code style="background:#0a0a0a;padding:1px 4px;border-radius:3px">switchport voice vlan 100</code></div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "After moving to a new desk, a user can browse internet but cannot access the file server in VLAN 30." — Kenapa?</div>
+      <div class="scenario-a">→ Port baru tu dalam <b>VLAN yang salah</b></div>
+      <div class="scenario-why">Port lama VLAN 30 (sama subnet dengan server). Port baru mungkin dalam VLAN 10 atau VLAN 1. Internet jalan sebab ada routing keluar, tapi file server dalam VLAN lain tak boleh reach.</div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "Which technology separates voice and data traffic on the same switch port?" — Jawapan?</div>
+      <div class="scenario-a">→ <b>Voice VLAN (802.1Q)</b></div>
+      <div class="scenario-why">Satu port boleh handle dua VLAN — data VLAN untuk PC dan voice VLAN untuk phone, guna 802.1Q tagging.</div>
+    </div>
+    <div class="scenario">
+      <div class="scenario-q">❓ "Desktops cannot see traffic from other devices. Which device to use?" — Router, Switch, atau AP?</div>
+      <div class="scenario-a">→ <b>Switch</b> (dengan VLAN)</div>
+      <div class="scenario-why">Switch dengan VLAN isolate traffic antara device. Router untuk routing antara network. Soalan tu dalam context network design untuk pejabat baru.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BAHAGIAN 3: RINGKASAN COMPARE
+══════════════════════════════════════════════════════ -->
+<div class="div"></div>
+<div class="sec">
+  <div class="sec-hdr" style="color:var(--yellow)">🟡 &nbsp;Bahagian 3 — Ringkasan Beza Semua Konsep</div>
+
+  <table class="ctbl">
+    <tr><th>Singkatan</th><th>Maksud Penuh</th><th>Fungsi Sebenar</th><th>Ingat Dengan</th></tr>
+    <tr>
+      <td class="key" style="color:var(--blue)">NAT</td>
+      <td>Network Address Translation</td>
+      <td>Translate private IP ke public IP (atau sebaliknya)</td>
+      <td><span style="color:var(--yellow)">1-to-1 mapping</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--orange)">PAT</td>
+      <td>Port Address Translation</td>
+      <td>Banyak private IP → satu public IP, guna port number untuk bezakan</td>
+      <td><span style="color:var(--yellow)">Many-to-1, guna PORT</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--green)">VIP</td>
+      <td>Virtual IP Address</td>
+      <td>IP yang dikongsi — untuk redundancy (FHRP) atau load balancing</td>
+      <td><span style="color:var(--yellow)">Shared IP, redundancy</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--purple)">VLAN</td>
+      <td>Virtual LAN</td>
+      <td>Bahagikan switch jadi beberapa network logik, isolate traffic</td>
+      <td><span style="color:var(--yellow)">Dinding logik dalam switch</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--purple)">Voice VLAN</td>
+      <td>Voice Virtual LAN</td>
+      <td>VLAN khas untuk VoIP phone — dapat QoS priority, asingkan dari data</td>
+      <td><span style="color:var(--yellow)">Phone ada VLAN sendiri</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--teal)">802.1Q</td>
+      <td>IEEE 802.1Q (VLAN Tagging)</td>
+      <td>Standard untuk tag frame dengan VLAN ID pada trunk port</td>
+      <td><span style="color:var(--yellow)">Label/tag untuk VLAN</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--green)">Native VLAN</td>
+      <td>Native VLAN</td>
+      <td>VLAN untuk frame yang tak ada tag pada trunk port</td>
+      <td><span style="color:var(--yellow)">VLAN default trunk</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--blue)">SVI</td>
+      <td>Switch Virtual Interface</td>
+      <td>Interface logik pada L3 switch untuk route antara VLAN</td>
+      <td><span style="color:var(--yellow)">L3 switch gateway per-VLAN</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--orange)">IP Helper</td>
+      <td>IP Helper Address</td>
+      <td>Forward DHCP broadcast across VLAN/subnet boundary ke DHCP server</td>
+      <td><span style="color:var(--yellow)">DHCP relay untuk multi-VLAN</span></td>
+    </tr>
+    <tr>
+      <td class="key" style="color:var(--teal)">VXLAN</td>
+      <td>Virtual Extensible LAN</td>
+      <td>Extend VLAN merentasi Layer 3 network — untuk data center/cloud</td>
+      <td><span style="color:var(--yellow)">VLAN tapi across L3/internet</span></td>
+    </tr>
+  </table>
+
+  <!-- Final exam tips -->
+  <div class="note">
+    <div class="note-title">📌 Last Tip — Soalan Yang Paling Kerap Keluar</div>
+    <div class="note-row"><span class="note-k">PAT soalan</span><span class="note-v">Cari perkataan <b>"single IP"</b>, <b>"many devices"</b>, <b>"non-routable address"</b> — semua tu = PAT</span></div>
+    <div class="note-row"><span class="note-k">Voice VLAN</span><span class="note-v">Phone problem tapi PC okay = <b>Voice VLAN missing</b> atau wrong. Guna <code style="background:#06111a;padding:1px 5px;border-radius:3px;color:var(--blue)">switchport voice vlan X</code></span></div>
+    <div class="note-row"><span class="note-k">VLAN problem</span><span class="note-v">"Can access internet but not server / department share" = <b>Wrong VLAN assignment</b> pada port</span></div>
+    <div class="note-row"><span class="note-k">DHCP tak jalan</span><span class="note-v">VLAN baru tak dapat IP = <b>IP helper</b> belum configure pada router/L3 switch untuk VLAN baru tu</span></div>
+    <div class="note-row"><span class="note-k">Trunk port</span><span class="note-v">Nak sambung 2 switch yang ada multiple VLAN = <b>Trunk port dengan 802.1Q</b></span></div>
+  </div>
+</div>
+
+<div class="footer">CompTIA N10-009 · NAT/PAT & VLAN Deep Dive · 2 hari lagi — faham = lulus 💪</div>
+</div>
+<script>
+    if (sessionStorage.getItem('hariz_auth_session') !== 'authenticated_true') {
+      window.location.replace('index.html');
+    }
+    function logout() {
+      sessionStorage.removeItem('hariz_auth_session');
+      window.location.replace('index.html');
+    }
+</script>
+</body>
+</html>

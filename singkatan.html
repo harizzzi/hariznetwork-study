@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faham Singkatan Network+ — Analogi Mudah</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--s1:#0a0d16;--s2:#0e1220;--s3:#121828;
+  --bd:#182030;--bd2:#202c40;
+  --blue:#4da6ff;--green:#00e676;--orange:#ffab40;
+  --red:#ff5252;--purple:#ce93d8;--yellow:#ffd54f;
+  --teal:#4dd0e1;--pink:#f48fb1;
+  --text:#b8cce0;--muted:#2a4060;--dim:#141e2c;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px;line-height:1.6}
+.page{max-width:960px;margin:0 auto}
+
+/* BANNER */
+.banner{background:linear-gradient(135deg,#090d1e,#06080e);border:1px solid var(--bd2);border-radius:14px;padding:22px 26px;margin-bottom:22px;border-left:4px solid var(--blue)}
+.banner h1{font-size:21px;font-weight:800;color:#fff;margin-bottom:4px}
+.banner p{font-size:12px;color:var(--muted);font-family:monospace;margin-top:4px}
+
+/* NAV */
+.nav-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.nav-pill{padding:6px 14px;border-radius:99px;font-size:11px;font-weight:700;font-family:monospace;cursor:pointer;border:1px solid;transition:all .2s;text-decoration:none}
+
+/* SECTION */
+.section{margin-bottom:28px;scroll-margin-top:16px}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.sec-hdr-icon{font-size:20px}
+.sec-hdr-text h2{font-size:16px;font-weight:700;color:#fff}
+.sec-hdr-text p{font-size:11px;font-family:monospace;color:var(--muted);margin-top:2px}
+
+/* CONCEPT CARD */
+.concept{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.concept::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
+.concept.blue::before{background:var(--blue)}
+.concept.green::before{background:var(--green)}
+.concept.orange::before{background:var(--orange)}
+.concept.red::before{background:var(--red)}
+.concept.purple::before{background:var(--purple)}
+.concept.teal::before{background:var(--teal)}
+.concept.yellow::before{background:var(--yellow)}
+.concept.pink::before{background:var(--pink)}
+
+.concept-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.abbr{font-size:22px;font-weight:800;font-family:monospace;line-height:1}
+.full-name{font-size:11px;color:var(--muted);margin-top:3px;font-family:monospace}
+.exam-badge{font-size:10px;font-family:monospace;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.exam-badge.hot{background:#2a0808;color:var(--red);border:1px solid #4a1010}
+.exam-badge.med{background:#1a1200;color:var(--orange);border:1px solid #3a2800}
+.exam-badge.low{background:#0a1a0a;color:var(--green);border:1px solid #1a3a1a}
+
+/* ANALOGY BOX */
+.analogy-box{background:var(--s2);border-radius:10px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--bd2)}
+.analogy-label{font-size:10px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.analogy-text{font-size:13.5px;color:#a0c0d8;line-height:1.75}
+.analogy-text b{color:#c8e0f0;font-weight:600}
+.analogy-text .hi{font-family:monospace;font-size:12px;font-weight:700;padding:1px 6px;border-radius:4px}
+.hi-b{background:#0a1e36;color:var(--blue)}
+.hi-g{background:#002a10;color:var(--green)}
+.hi-o{background:#1e1000;color:var(--orange)}
+.hi-r{background:#200808;color:var(--red)}
+.hi-p{background:#160828;color:var(--purple)}
+.hi-y{background:#1e1600;color:var(--yellow)}
+.hi-t{background:#001820;color:var(--teal)}
+
+/* FUNCTION ROW */
+.func{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;font-size:13px}
+.func:last-child{margin-bottom:0}
+.func-icon{flex-shrink:0;font-size:14px;margin-top:1px}
+.func-text{color:#90b0c8;line-height:1.6}
+.func-text b{color:#b0d0e8;font-weight:600}
+
+/* EXAM TIP */
+.exam-tip{background:#0e0808;border:1px solid #2a1010;border-left:3px solid var(--red);border-radius:8px;padding:10px 14px;margin-top:10px}
+.exam-tip-label{font-size:10px;font-family:monospace;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.exam-tip-text{font-size:12.5px;color:#c08090;line-height:1.6}
+.exam-tip-text b{color:#e0a0b0;font-weight:600}
+
+/* DIAGRAM */
+.diag{background:var(--s3);border:1px solid var(--bd2);border-radius:10px;padding:14px;margin:10px 0;overflow-x:auto}
+.diag-title{font-size:10px;font-family:monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.flow{display:flex;align-items:center;gap:0;flex-wrap:nowrap;overflow-x:auto}
+.fnode{background:var(--s1);border:1px solid var(--bd2);border-radius:8px;padding:7px 12px;font-size:11.5px;text-align:center;min-width:80px;flex-shrink:0}
+.fnode .nl{font-size:10px;color:var(--muted);margin-bottom:2px;font-family:monospace}
+.fnode .nv{font-family:monospace;font-weight:700;font-size:12px}
+.farr{color:var(--muted);font-size:16px;padding:0 6px;flex-shrink:0}
+.farr.act{color:var(--orange)}
+
+/* COMPARE */
+.cmp{display:grid;gap:8px;margin:10px 0}
+.cmp2{grid-template-columns:1fr 1fr}
+.cmp3{grid-template-columns:1fr 1fr 1fr}
+.cmp4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:640px){.cmp2,.cmp3,.cmp4{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.cmp2,.cmp3,.cmp4{grid-template-columns:1fr}}
+.cmp-item{background:var(--s3);border:1px solid var(--bd2);border-radius:8px;padding:10px 12px}
+.cmp-name{font-size:12px;font-weight:700;font-family:monospace;margin-bottom:4px}
+.cmp-desc{font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--bd);margin:24px 0}
+
+/* QUICK REF TABLE */
+.qtbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;border-radius:10px;overflow:hidden}
+.qtbl th{background:var(--s3);color:var(--muted);font-family:monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--bd2)}
+.qtbl td{padding:8px 12px;border-bottom:1px solid var(--bd);vertical-align:top}
+.qtbl tr:last-child td{border-bottom:none}
+.qtbl tr:hover td{background:var(--s2)}
+.qtbl .k{font-family:monospace;font-weight:700;white-space:nowrap}
+
+/* FOOTER */
+.footer{text-align:center;padding:20px 0 8px;font-size:11px;color:var(--dim);font-family:monospace}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="banner">
+  <h1>Faham Singkatan — Dengan Analogi, Bukan Hafal</h1>
+  <p>FHRP · LLDP · BGP · OSPF · EIGRP · STP · LACP · QoS · dan lagi · CompTIA N10-009</p>
+</div>
+
+<!-- NAV -->
+<div class="nav-pills">
+  <a class="nav-pill" href="#sec-fhrp" style="color:var(--orange);border-color:#3a2000;background:#120c00">FHRP / VRRP</a>
+  <a class="nav-pill" href="#sec-lldp" style="color:var(--teal);border-color:#0f3040;background:#001820">LLDP / CDP</a>
+  <a class="nav-pill" href="#sec-routing" style="color:var(--green);border-color:#1a3a10;background:#021008">BGP / OSPF / EIGRP</a>
+  <a class="nav-pill" href="#sec-stp" style="color:var(--blue);border-color:#0f2540;background:#060f1a">STP / RSTP</a>
+  <a class="nav-pill" href="#sec-lacp" style="color:var(--purple);border-color:#2a1050;background:#0e0820">LACP / LAG</a>
+  <a class="nav-pill" href="#sec-qos" style="color:var(--yellow);border-color:#3a2800;background:#100e00">QoS / CoS</a>
+  <a class="nav-pill" href="#sec-others" style="color:var(--pink);border-color:#3a1020;background:#120010">Lain-lain</a>
+</div>
+
+<!-- ══════════════════════════════════════
+     FHRP / VRRP / HSRP
+══════════════════════════════════════ -->
+<div class="section" id="sec-fhrp">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">🔄</div>
+    <div class="sec-hdr-text">
+      <h2>FHRP — First Hop Redundancy Protocol</h2>
+      <p>HSRP · VRRP · GLBP · Gateway redundancy</p>
+    </div>
+  </div>
+
+  <div class="concept orange">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--orange)">FHRP</div><div class="full-name">First Hop Redundancy Protocol</div></div>
+      <div class="exam-badge hot">🎯 SELALU KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🏪 Analogi — Kedai Dengan 2 Cashier</div>
+      <div class="analogy-text">
+        Bayangkan kau masuk kedai, ada <b>2 cashier</b> — cashier A dan cashier B. Biasanya kau pergi cashier A. Tapi kalau cashier A <b>pengsan</b>, cashier B <b>ambil alih automatik</b> tanpa kau perlu buat apa-apa.<br><br>
+        Dalam network: PC kau ada <b>satu default gateway</b> (contoh <span class="hi hi-o">192.168.1.1</span>). Kalau router tu rosak, traffic kau stuck. FHRP selesaikan masalah ni dengan bagi <b>dua router share satu Virtual IP</b> — bila primary router fail, secondary ambil alih <b>dalam masa beberapa saat</b>, tanpa PC kau perasan.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">✅</span><div class="func-text">Bagi PC satu gateway address sahaja, tapi ada <b>2 router backup</b> sebenarnya</div></div>
+    <div class="func"><span class="func-icon">✅</span><div class="func-text">Guna <b>Virtual IP (VIP)</b> — IP yang dikongsi antara router-router dalam group</div></div>
+    <div class="func"><span class="func-icon">✅</span><div class="func-text">Primary router <b>fail</b> → secondary ambil alih VIP <b>automatik</b>, tanpa tukar config PC</div></div>
+    <div class="diag">
+      <div class="diag-title">Cara FHRP Berfungsi</div>
+      <div class="flow">
+        <div class="fnode"><div class="nl">PC anda</div><div class="nv" style="color:var(--blue)">gateway</div><div style="font-size:10px;color:var(--muted)">192.168.1.1</div></div>
+        <div class="farr act">→</div>
+        <div class="fnode" style="border-color:#2a3a10;background:#080f02"><div class="nl">Virtual IP</div><div class="nv" style="color:var(--green)">192.168.1.1</div><div style="font-size:10px;color:var(--green)">VIP (FHRP)</div></div>
+        <div class="farr">→</div>
+        <div class="fnode" style="border-color:#1a3010;background:#040e02"><div class="nl">Router A</div><div class="nv" style="color:var(--green)">PRIMARY ✅</div><div style="font-size:10px;color:var(--green)">active</div></div>
+        <div style="font-size:13px;color:var(--muted);padding:0 6px">/</div>
+        <div class="fnode" style="border-color:#1a2a30;background:#020a0e"><div class="nl">Router B</div><div class="nv" style="color:var(--muted)">STANDBY 💤</div><div style="font-size:10px;color:var(--muted)">standby</div></div>
+      </div>
+    </div>
+    <div class="cmp cmp3" style="margin-top:10px">
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--orange)">HSRP</div><div class="cmp-desc">Hot Standby Router Protocol. <b>Cisco proprietary</b>. Paling lama ada.</div></div>
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--blue)">VRRP</div><div class="cmp-desc">Virtual Router Redundancy Protocol. <b>Open standard</b>. Boleh guna apa-apa vendor.</div></div>
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--green)">GLBP</div><div class="cmp-desc">Gateway LB Protocol. <b>Cisco</b>. Boleh load balance antara router sekali.</div></div>
+    </div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Which technology uses a VIP to provide gateway redundancy?" → <b>FHRP</b>. "Which protocol allows automatic failover for active-passive firewall pair?" → <b>VRRP</b>. "Open standard FHRP" → <b>VRRP</b> (bukan HSRP — HSRP adalah Cisco je).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LLDP / CDP
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section" id="sec-lldp">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">🔍</div>
+    <div class="sec-hdr-text">
+      <h2>LLDP & CDP — Discovery Protocols</h2>
+      <p>Link Layer Discovery Protocol · Cisco Discovery Protocol</p>
+    </div>
+  </div>
+
+  <div class="concept teal">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--teal)">LLDP</div><div class="full-name">Link Layer Discovery Protocol</div></div>
+      <div class="exam-badge med">🎯 KADANG KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">📡 Analogi — Jiran Kenalkan Diri</div>
+      <div class="analogy-text">
+        Bayangkan kau pindah ke kawasan baru. Jiran sebelah ketuk pintu dan cakap: <b>"Hai, saya Pak Ali, saya tinggal di No. 5, nombor telefon saya 012-xxx"</b>. Kau terus tahu siapa jiran kau tanpa perlu keluar jalan-jalan.<br><br>
+        LLDP buat benda sama dalam network — setiap device <b>announce dirinya</b> kepada device yang connected terus: <i>"Aku switch X, port Gi0/1, VLAN 10, model ABC"</i>. Network admin boleh tahu <b>topologi network</b> tanpa pergi check satu-satu secara fizikal.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">✅</span><div class="func-text">Discover device yang <b>connected terus (directly connected)</b> sahaja — bukan seluruh network</div></div>
+    <div class="func"><span class="func-icon">✅</span><div class="func-text">Info yang dikongsi: hostname, port, VLAN, IP address, model device</div></div>
+    <div class="func"><span class="func-icon">✅</span><div class="func-text"><b>Open standard (IEEE 802.1AB)</b> — semua vendor support, tak kira Cisco, HP, Juniper</div></div>
+    <div class="cmp cmp2" style="margin-top:10px">
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--teal)">LLDP</div><div class="cmp-desc"><b>Open standard</b> — semua vendor. Guna bila multivendor environment. IEEE 802.1AB.</div></div>
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--orange)">CDP</div><div class="cmp-desc"><b>Cisco Proprietary</b> — Cisco device je. Bagi info lebih detail tapi Cisco-only.</div></div>
+    </div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Technician nak tahu switch dan port mana VoIP phone connected" → <b>LLDP</b>. "Multivendor environment, nak document network" → <b>LLDP</b> (bukan CDP). LLDP hanya nampak <b>directly connected</b> — nak nampak semua, kena log in satu-satu dan run LLDP dari tiap device.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ROUTING PROTOCOLS
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section" id="sec-routing">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">🗺</div>
+    <div class="sec-hdr-text">
+      <h2>Routing Protocols — BGP, OSPF, EIGRP, RIP</h2>
+      <p>Router guna protokol ni untuk cari jalan terbaik hantar packet</p>
+    </div>
+  </div>
+
+  <div class="concept green">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--green)">Routing Protocol</div><div class="full-name">Apa fungsi dia sebenarnya?</div></div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🗺 Analogi — Waze Untuk Router</div>
+      <div class="analogy-text">
+        Router adalah macam driver yang nak hantar barang dari KL ke Penang. Dia ada <b>banyak jalan pilihan</b>. <b>Routing protocol</b> adalah macam <b>Waze</b> — dia kumpul info tentang semua jalan (router lain), kira jalan mana <b>paling cepat/pendek</b>, dan update secara automatik bila ada jalan tutup (router fail).<br><br>
+        Tanpa routing protocol, admin kena manually bagitau router "jalan ke Penang ikut sini" — bayangkan buat tu untuk ribuan destination. Dengan routing protocol, router <b>belajar sendiri</b> jalan mana nak ambil.
+      </div>
+    </div>
+  </div>
+
+  <div class="concept blue">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--blue)">BGP</div><div class="full-name">Border Gateway Protocol</div></div>
+      <div class="exam-badge hot">🎯 SELALU KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🌏 Analogi — Diplomatic Relations Antara Negara</div>
+      <div class="analogy-text">
+        BGP adalah <b>routing protocol untuk internet</b>. Bayangkan setiap ISP (Maxis, TIME, Celcom, Google, Amazon) adalah sebuah <b>negara</b>. BGP adalah <b>perjanjian diplomatik</b> antara negara-negara tu — mereka bersetuju untuk saling kongsi maklumat route.<br><br>
+        Setiap ISP ada <b>Autonomous System (AS) number</b> sendiri — macam nombor negara. BGP hantar info: <i>"Untuk reach Google (AS 15169), lalui Maxis (AS 9534) dulu"</i>.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">🌐</span><div class="func-text"><b>Internet routing</b> — guna antara ISP dan autonomous systems. Satu-satunya EGP.</div></div>
+    <div class="func"><span class="func-icon">📋</span><div class="func-text">Pilih path guna <b>attribute list</b> (AS path, MED, local preference) — bukan jarak/speed</div></div>
+    <div class="func"><span class="func-icon">🔢</span><div class="func-text">Setiap network ada <b>Autonomous System (AS) number</b> — macam ID organisasi</div></div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Connect different ISP" / "internet routing" / "exchanging routes with different ISP" → <b>BGP</b>. "Attribute list for path selection" → <b>BGP</b>. BGP = satu-satunya EGP (External Gateway Protocol).</div>
+    </div>
+  </div>
+
+  <div class="concept green">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--green)">OSPF</div><div class="full-name">Open Shortest Path First</div></div>
+      <div class="exam-badge hot">🎯 SELALU KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🗺 Analogi — GPS Yang Kira Jarak Sebenar</div>
+      <div class="analogy-text">
+        OSPF adalah macam GPS yang <b>kira jarak sebenar</b> ke destination. Dia tengok semua jalan yang ada, kira mana yang paling <b>pendek (shortest path)</b> guna <b>Dijkstra's algorithm</b>, dan pilih tu.<br><br>
+        Kalau ada jalan yang tutup (router fail), OSPF <b>update peta dengan cepat</b> (fast convergence) dan cari jalan lain. Semua router dalam network share <b>peta yang sama</b> — link-state map.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">⚡</span><div class="func-text"><b>Fast convergence</b> — update route dengan cepat bila ada perubahan</div></div>
+    <div class="func"><span class="func-icon">📐</span><div class="func-text">Guna <b>Dijkstra's algorithm</b> — kira shortest path berdasarkan bandwidth/cost</div></div>
+    <div class="func"><span class="func-icon">📡</span><div class="func-text">Hantar update guna <b>multicast</b> (224.0.0.5/6) — bukan broadcast, lebih efficient</div></div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Dijkstra's algorithm" → <b>OSPF</b>. "Shortest path / fast convergence" → <b>OSPF</b>. "Interior gateway, open standard" → <b>OSPF</b>. OSPF guna multicast, bukan broadcast.</div>
+    </div>
+  </div>
+
+  <div class="concept orange">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--orange)">EIGRP</div><div class="full-name">Enhanced Interior Gateway Routing Protocol</div></div>
+      <div class="exam-badge hot">🎯 SELALU KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🏎 Analogi — GPS Cisco Dengan Backup Route Ready</div>
+      <div class="analogy-text">
+        EIGRP macam GPS yang bukan je tahu <b>jalan utama (Successor)</b>, tapi dah siap sedia <b>jalan backup (Feasible Successor)</b> kalau jalan utama jam atau tutup. Bila jalan utama fail, dia <b>terus switch ke backup</b> tanpa kira semula.<br><br>
+        Ini buat EIGRP lebih laju dari OSPF dalam situasi failover tertentu. Tapi kelemahannya — ini produk <b>Cisco sahaja</b>, tak boleh guna dengan router lain vendor.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">🎯</span><div class="func-text"><b>Successor</b> = jalan utama terbaik. <b>Feasible Successor</b> = backup route yang dah pre-computed</div></div>
+    <div class="func"><span class="func-icon">⚖️</span><div class="func-text"><b>Unequal cost load balancing</b> — boleh guna beberapa jalan dengan kos berbeza serentak</div></div>
+    <div class="func"><span class="func-icon">🏢</span><div class="func-text"><b>Cisco proprietary</b>. Guna port <b>88</b>. Algorithm: <b>DUAL (Diffusing Update Algorithm)</b></div></div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Successor + Feasible Successor" → <b>EIGRP</b>. "Unequal cost load balancing" → <b>EIGRP</b>. "DUAL algorithm" → <b>EIGRP</b>. Port 88 → <b>EIGRP</b>.</div>
+    </div>
+  </div>
+
+  <div class="concept red">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--red)">RIP</div><div class="full-name">Routing Information Protocol</div></div>
+      <div class="exam-badge low">📌 TAHU SAHAJA</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🚶 Analogi — Kira Bilangan Traffic Light, Bukan Jarak</div>
+      <div class="analogy-text">
+        RIP adalah routing protocol paling <b>simple dan lama</b>. Dia pilih jalan berdasarkan <b>bilangan hop (router)</b> yang perlu dilalui — macam kira berapa traffic light nak lalu, bukan berapa jauh jarak sebenar.<br><br>
+        Masalahnya: jalan yang ada 3 hop tapi <b>laju 10Gbps</b> dianggap sama dengan jalan 3 hop yang <b>perlahan 1Mbps</b>. RIP tak nampak speed — dia nampak hop count je. Max 15 hop.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">🔢</span><div class="func-text">Metric = <b>hop count</b> sahaja. Maximum <b>15 hops</b> — lebih dari 15 = unreachable</div></div>
+    <div class="func"><span class="func-icon">🐢</span><div class="func-text"><b>Slowest convergence</b> — lambat update bila ada perubahan. Legacy protocol.</div></div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Hop count metric" → <b>RIP</b>. "Maximum 15 hops" → <b>RIP</b>. "Slowest convergence" → <b>RIP</b>. Soalan exam jarang tanya pasal RIP secara mendalam — biasanya compare je.</div>
+    </div>
+  </div>
+
+  <!-- Routing cheat compare -->
+  <table class="qtbl">
+    <tr><th>Protocol</th><th>Jenis</th><th>Algorithm / Metric</th><th>Keyword Exam</th></tr>
+    <tr><td class="k" style="color:var(--blue)">BGP</td><td>EGP (External)</td><td>Attribute list, AS path</td><td style="color:var(--yellow)">Internet, ISP, autonomous system</td></tr>
+    <tr><td class="k" style="color:var(--green)">OSPF</td><td>IGP, Link-state</td><td>Dijkstra, bandwidth cost</td><td style="color:var(--yellow)">Dijkstra, shortest path, fast convergence</td></tr>
+    <tr><td class="k" style="color:var(--orange)">EIGRP</td><td>IGP, Hybrid (Cisco)</td><td>DUAL, composite metric</td><td style="color:var(--yellow)">Successor, unequal LB, port 88, Cisco</td></tr>
+    <tr><td class="k" style="color:var(--red)">RIP</td><td>IGP, Distance-vector</td><td>Hop count (max 15)</td><td style="color:var(--yellow)">Hop count, max 15, slowest</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     STP
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section" id="sec-stp">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">🔁</div>
+    <div class="sec-hdr-text">
+      <h2>STP — Spanning Tree Protocol</h2>
+      <p>Prevent loop dalam network switch</p>
+    </div>
+  </div>
+
+  <div class="concept blue">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--blue)">STP</div><div class="full-name">Spanning Tree Protocol</div></div>
+      <div class="exam-badge hot">🎯 SELALU KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🔄 Analogi — Dua Jalan Pergi Sekolah, Tapi Tutup Satu</div>
+      <div class="analogy-text">
+        Ada dua jalan dari rumah ke sekolah. Kalau kau guna <b>kedua-dua jalan serentak</b>, kau akan <b>pusing-pusing tak habis</b> — pergi jalan A, balik jalan B, pergi jalan A lagi... loop tak terhenti.<br><br>
+        STP selesai masalah ni — dia <b>block satu jalan</b> (port) untuk elak loop. Kalau jalan utama rosak, STP <b>buka semula jalan yang tadi diblock</b> sebagai backup.<br><br>
+        Dalam switch network: bila ada <b>redundant links</b> (dua kabel antara dua switch), STP <b>block satu</b> untuk elak broadcast storm / infinite loop.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">🛡</span><div class="func-text">Prevent <b>Layer 2 loop</b> — broadcast storm yang boleh crash network</div></div>
+    <div class="func"><span class="func-icon">👑</span><div class="func-text">Pilih <b>Root Bridge</b> — switch yang jadi pusat topologi. Switch dengan Bridge ID terendah menang.</div></div>
+    <div class="func"><span class="func-icon">🔢</span><div class="func-text">Default STP priority: <b>32768</b>. Turunkan priority untuk buat switch jadi root bridge.</div></div>
+    <div class="cmp cmp2" style="margin-top:10px">
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--blue)">STP (802.1D)</div><div class="cmp-desc">Original. <b>Slow convergence</b> — 30-50 saat untuk converge bila ada perubahan.</div></div>
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--green)">RSTP (802.1W)</div><div class="cmp-desc">Rapid STP. <b>Fast convergence</b> — dalam beberapa saat. Guna dalam network moden.</div></div>
+    </div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Network ada potential loop scenarios" → enable <b>STP</b>. "Default STP priority" → <b>32768</b>. "Root bridge determination" → switch dengan <b>Bridge ID terendah</b> (priority + MAC). "Slow convergence → configure <b>RSTP</b>".</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LACP / LAG
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section" id="sec-lacp">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">🔗</div>
+    <div class="sec-hdr-text">
+      <h2>LACP & LAG — Link Aggregation</h2>
+      <p>Gabung beberapa kabel jadi satu logical link</p>
+    </div>
+  </div>
+
+  <div class="concept purple">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--purple)">LACP / LAG</div><div class="full-name">Link Aggregation Control Protocol / Link Aggregation Group</div></div>
+      <div class="exam-badge med">🎯 KADANG KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🛣 Analogi — Jalan Biasa vs Lebuh Raya 4 Lorong</div>
+      <div class="analogy-text">
+        Kau ada satu jalan 1 lorong antara dua bandar — maximum 100 kereta/jam. Nak tambah capacity, kau <b>bina 3 lorong lagi</b> di sebelah, jadi <b>4 lorong serentak</b> — sekarang boleh 400 kereta/jam.<br><br>
+        LACP buat benda sama dengan kabel network — <b>gabung 4 kabel 1Gbps</b> jadi <b>satu logical link 4Gbps</b>. Switch nampak macam satu connection je tapi sebenarnya ada 4 kabel running serentak. Kalau satu kabel putus, <b>3 lagi masih jalan</b>.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">⚡</span><div class="func-text"><b>Tingkat bandwidth</b> — 4 × 1Gbps = 4Gbps logical link</div></div>
+    <div class="func"><span class="func-icon">🛡</span><div class="func-text"><b>Redundancy</b> — satu kabel putus, link masih up dengan bandwidth berkurang</div></div>
+    <div class="func"><span class="func-icon">🔄</span><div class="func-text"><b>Prevent STP dari block</b> redundant links — LAG nampak macam satu link, STP tak block</div></div>
+    <div class="cmp cmp2" style="margin-top:10px">
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--purple)">LAG</div><div class="cmp-desc">Link Aggregation Group — <b>nama untuk group</b> kabel yang digabung. Port-channel, EtherChannel.</div></div>
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--blue)">LACP (802.3ad)</div><div class="cmp-desc"><b>Protokol</b> yang negotiate dan manage LAG secara automatik. Open standard.</div></div>
+    </div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"Connect dua switch dengan redundant links untuk tingkat bandwidth" → <b>Link Aggregation</b>. "40Gbps switch tapi ISP bagi 40Gbps, switch port only 10G" → guna <b>Link Aggregation</b> (4 × 10G = 40G). "Redundant connection between switches without STP blocking" → <b>LACP/LAG</b>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     QoS / CoS
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section" id="sec-qos">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">🎯</div>
+    <div class="sec-hdr-text">
+      <h2>QoS & CoS — Traffic Priority</h2>
+      <p>Bagi priority kepada traffic yang penting</p>
+    </div>
+  </div>
+
+  <div class="concept yellow">
+    <div class="concept-header">
+      <div><div class="abbr" style="color:var(--yellow)">QoS</div><div class="full-name">Quality of Service</div></div>
+      <div class="exam-badge hot">🎯 SELALU KELUAR</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">🏥 Analogi — Kaunter Kecemasan Hospital</div>
+      <div class="analogy-text">
+        Bayangkan hospital dengan kaunter biasa dan kaunter <b>kecemasan (emergency)</b>. Pesakit kritikal tak perlu beratur — mereka <b>dapat layanan terus</b>. Orang demam biasa perlu tunggu.<br><br>
+        QoS buat benda sama dalam network — <b>VoIP calls dan video conference</b> adalah "pesakit kecemasan" yang dapat <b>bandwidth dan priority lebih</b>. File download yang tak urgent tunggu belakang. Ini elakkan suara VoIP jadi putus-putus (jitter) walaupun network congested.
+      </div>
+    </div>
+    <div class="func"><span class="func-icon">📞</span><div class="func-text"><b>VoIP dan video</b> dapat priority tinggi — sensitive to delay dan jitter</div></div>
+    <div class="func"><span class="func-icon">⬇️</span><div class="func-text"><b>File download, backup</b> dapat priority rendah — boleh tunggu</div></div>
+    <div class="func"><span class="func-icon">🔧</span><div class="func-text">Configure pada <b>router atau switch</b> — mark traffic dengan DSCP atau CoS value</div></div>
+    <div class="cmp cmp2" style="margin-top:10px">
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--yellow)">QoS</div><div class="cmp-desc">Quality of Service — <b>broad term</b> untuk semua mechanism yang manage traffic quality. Layer 3 (IP header).</div></div>
+      <div class="cmp-item"><div class="cmp-name" style="color:var(--orange)">CoS</div><div class="cmp-desc">Class of Service — marking traffic priority kat <b>Layer 2</b> (Ethernet frame). Guna dalam VLAN/trunk.</div></div>
+    </div>
+    <div class="exam-tip">
+      <div class="exam-tip-label">🎯 EXAM TIP</div>
+      <div class="exam-tip-text">"VoIP voice quality poor when users upload large files" → configure <b>QoS on router</b>. "Video conference buffering at satellite office" → first check <b>QoS</b>. "Prioritize network traffic based on type" → <b>QoS</b>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     OTHERS
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="section" id="sec-others">
+  <div class="sec-hdr">
+    <div class="sec-hdr-icon">📦</div>
+    <div class="sec-hdr-text">
+      <h2>Singkatan Lain Yang Selalu Confuse</h2>
+      <p>SDN · NFV · VXLAN · SAN · CDN · IPAM</p>
+    </div>
+  </div>
+
+  <table class="qtbl">
+    <tr><th>Singkatan</th><th>Maksud</th><th>Analogi Mudah</th><th>Exam Clue</th></tr>
+    <tr>
+      <td class="k" style="color:var(--blue)">SDN</td>
+      <td>Software Defined Networking</td>
+      <td>Otak (control plane) dipisah dari otot (data plane) — network dimanage via software dari satu tempat</td>
+      <td style="color:var(--yellow)">"Centralized network management via software"</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--green)">SD-WAN</td>
+      <td>Software Defined WAN</td>
+      <td>Manage semua WAN connections (MPLS, broadband, 4G) dari satu dashboard. Zero-touch provisioning = auto setup.</td>
+      <td style="color:var(--yellow)">"Zero-touch provisioning", "multiple WAN links"</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--orange)">NFV</td>
+      <td>Network Functions Virtualization</td>
+      <td>Jalankan router, firewall, load balancer sebagai software (VM) bukan hardware dedicated</td>
+      <td style="color:var(--yellow)">"Implement routing in hypervisor" → NFV</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--purple)">VXLAN</td>
+      <td>Virtual Extensible LAN</td>
+      <td>VLAN tapi boleh stretch merentasi internet/L3 network — untuk data center dan cloud</td>
+      <td style="color:var(--yellow)">"Extend VLAN across L3", "data center interconnect"</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--teal)">CDN</td>
+      <td>Content Delivery Network</td>
+      <td>Copy website/video ke server dekat dengan user — macam kedai 7-Eleven, ada kat mana-mana</td>
+      <td style="color:var(--yellow)">"Reduce latency for geographically dispersed users"</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--pink)">SAN</td>
+      <td>Storage Area Network</td>
+      <td>Network khas untuk storage — macam harddisk besar yang dikongsi dalam network laju</td>
+      <td style="color:var(--yellow)">"High speed shared storage", "FC connection"</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--blue)">IPAM</td>
+      <td>IP Address Management</td>
+      <td>Sistem untuk track dan manage semua IP dalam network — supaya tak ada duplicate atau IP habis</td>
+      <td style="color:var(--yellow)">"Track and manage IP addresses"</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--green)">MIB</td>
+      <td>Management Information Base</td>
+      <td>Kamus untuk SNMP — file yang define apa yang boleh dimonitor dari sesuatu device</td>
+      <td style="color:var(--yellow)">"Import MIB" → SNMP cannot understand device status</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--orange)">AAA</td>
+      <td>Authentication, Authorization, Accounting</td>
+      <td>WHO are you (auth) → WHAT can you do (authz) → WHAT did you do (accounting)</td>
+      <td style="color:var(--yellow)">RADIUS dan TACACS+ implement AAA framework</td>
+    </tr>
+    <tr>
+      <td class="k" style="color:var(--red)">SCADA</td>
+      <td>Supervisory Control and Data Acquisition</td>
+      <td>System monitor dan control kilang, power plant, water treatment — OT (Operational Technology)</td>
+      <td style="color:var(--yellow)">"Industrial equipment", "OT environment"</td>
+    </tr>
+  </table>
+</div>
+
+<div class="footer">CompTIA N10-009 · Faham Bukan Hafal · Good luck! 💪</div>
+</div>
+<script>
+    if (sessionStorage.getItem('hariz_auth_session') !== 'authenticated_true') {
+      window.location.replace('index.html');
+    }
+    function logout() {
+      sessionStorage.removeItem('hariz_auth_session');
+      window.location.replace('index.html');
+    }
+</script>
+</body>
+</html>

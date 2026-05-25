@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Hariz Study System (Ultra Secure)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #06080e;
+      color: #b8cce0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: #0a0d16;
+      border: 1px solid #202c40;
+      padding: 30px;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    h2 { color: #fff; margin-bottom: 8px; font-size: 24px; text-align: center; }
+    p { color: #5a7090; font-size: 14px; text-align: center; margin-bottom: 24px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #4da6ff; letter-spacing: 1px; }
+    input {
+      width: 100%;
+      background: #0e1220;
+      border: 1px solid #182030;
+      padding: 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #4da6ff; }
+    button {
+      width: 100%;
+      background: #4da6ff;
+      color: #06080e;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #7dd3fc; }
+    .error-msg {
+      color: #ff5252;
+      font-size: 13px;
+      margin-top: 12px;
+      text-align: center;
+      display: none;
+      background: rgba(255,82,82,0.1);
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,82,82,0.2);
+    }
+    .loading { opacity: 0.6; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Sistem Nota Network+</h2>
+  <p>Akses Dilindungi PBKDF2 + Salt</p>
+  
+  <form id="loginForm" onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" required placeholder="••••••••">
+    </div>
+    <button type="submit" id="submitBtn">Masuk Sistem ➔</button>
+    <div id="errorMsg" class="error-msg">Password salah! Akses dinafikan.</div>
+  </form>
+</div>
+
+<script>
+  // Ini maklumat keselamatan yang dijana khas untuk password "hariz123"
+  // Salt menjadikan hash unik, Iteration (100,000x) menghalang brute-force decrypter online!
+const SECURITY_CONFIG = {
+  saltHex: "626f6e656361616d62616c616275",
+  iterations: 100000,
+  expectedHashHex: "6fc17397edf77b6588d3fe88f536e83576f27ffecf164d3b6e8aeaa7fea11ed2"
+};
+
+  // Fungsi menukar Hex String kepada ArrayBuffer
+  function hexToBuffer(hex) {
+    const pairs = hex.match(/[\da-f]{2}/gi);
+    return new Uint8Array(pairs.map(h => parseInt(h, 16)));
+  }
+
+  // Fungsi menukar ArrayBuffer kepada Hex String
+  function bufferToHex(buffer) {
+    return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Fungsi utama PBKDF2 (Key Stretching 100,000 kitaran)
+  async function derivePBKDF2(password, saltHex, iterations) {
+    const encoder = new TextEncoder();
+    const passwordBuffer = encoder.encode(password);
+    const saltBuffer = hexToBuffer(saltHex);
+
+    // Import plaintext password sebagai base key
+    const baseKey = await crypto.subtle.importKey(
+      "raw", passwordBuffer, "PBKDF2", false, ["deriveBits"]
+    );
+
+    // Lakukan pengiraan hash berpusing (stretching) sebanyak 100,000 kali menggunakan SHA-256
+    const derivedBits = await crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: saltBuffer,
+        iterations: iterations,
+        hash: "SHA-256"
+      },
+      baseKey,
+      256 // panjang key yang kita nak (256 bits)
+    );
+
+    return bufferToHex(derivedBits);
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    
+    const inputPass = passwordInput.value;
+
+    // Tukar rupa butang tanda sistem tengah berfikir (loading singkat untuk 100k berpusing)
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Menyemak Sekuriti...";
+    submitBtn.classList.add('loading');
+    errorMsg.style.display = 'none';
+
+    try {
+      // Guna PBKDF2 untuk tukar input password kepada hash yang secure
+      const computedHashHex = await derivePBKDF2(inputPass, SECURITY_CONFIG.saltHex, SECURITY_CONFIG.iterations);
+
+      if (computedHashHex === SECURITY_CONFIG.expectedHashHex) {
+        // Set session token sukses
+        sessionStorage.setItem('hariz_auth_session', 'authenticated_true');
+        window.location.href = 'dashboard.html';
+      } else {
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Ralat sekuriti dikesan pada browser.");
+    } finally {
+      // Pulihkan butang balik
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Masuk Sistem ➔";
+      submitBtn.classList.remove('loading');
+    }
+  }
+</script>
+</body>
+</html>
