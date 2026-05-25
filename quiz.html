@@ -51,9 +51,42 @@ header p{color:#94a3b8;margin-top:5px;font-size:.88rem}
 .retry-btn{background:#334155;color:#e2e8f0;border:none;padding:11px 22px;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer}
 .retry-btn:hover{background:#475569}
 .badge{display:inline-block;background:#1e293b;border:1px solid #334155;border-radius:99px;padding:3px 10px;font-size:.75rem;color:#94a3b8;margin-top:8px}
+
+.site-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      pointer-events: none; /* Supaya tidak mengganggu klik elemen lain */
+    }
+
+    .brand-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff; /* Teks warna putih */
+      letter-spacing: 1.5px;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .brand-logo::after {
+      content: ".";
+      color: #00e676; /* Titik warna hijau terang/neon */
+      font-size: 32px;
+      line-height: 0;
+    }
+    
 </style>
 </head>
 <body>
+
+    <header class="site-header">
+  <div class="brand-logo">HRZ</div>
+</header>
+
 <div class="container">
   <header>
     <h1>⚡ CompTIA Network+ N10-009</h1>
