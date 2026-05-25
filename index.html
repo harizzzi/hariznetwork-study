@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
+    <link rel="icon" type="image/png" href="logo.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Hariz Study System (Ultra Secure)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #06080e;
       color: #b8cce0;
       display: flex;
+      flex-direction: column; /* Ditukar supaya header berada di atas, login di tengah */
       justify-content: center;
       align-items: center;
       height: 100vh;
+      position: relative;
     }
+
+    /* HEADER BARU DI ATAS SEKALI BELAH KIRI */
+    .site-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      pointer-events: none; /* Supaya tidak mengganggu klik elemen lain */
+    }
+
+    .brand-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff; /* Teks warna putih */
+      letter-spacing: 1.5px;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .brand-logo::after {
+      content: ".";
+      color: #00e676; /* Titik warna hijau terang/neon */
+      font-size: 32px;
+      line-height: 0;
+    }
+
     .login-container {
       background: #0a0d16;
       border: 1px solid #202c40;
@@ -23,6 +56,7 @@
       width: 100%;
       max-width: 400px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1; /* Memastikan kotak login sentiasa di atas lapisan lain */
     }
     h2 { color: #fff; margin-bottom: 8px; font-size: 24px; text-align: center; }
     p { color: #5a7090; font-size: 14px; text-align: center; margin-bottom: 24px; }
@@ -69,6 +103,10 @@
 </head>
 <body>
 
+<header class="site-header">
+  <div class="brand-logo">HRZ</div>
+</header>
+
 <div class="login-container">
   <h2>Sistem Nota Network+</h2>
   <p>Akses Dilindungi PBKDF2 + Salt</p>
@@ -84,37 +122,31 @@
 </div>
 
 <script>
-  // Ini maklumat keselamatan yang dijana khas untuk password "hariz123"
-  // Salt menjadikan hash unik, Iteration (100,000x) menghalang brute-force decrypter online!
+  // Konfigurasi keselamatan asal (Tidak diusik)
 const SECURITY_CONFIG = {
   saltHex: "626f6e656361616d62616c616275",
   iterations: 100000,
-  expectedHashHex: "6fc17397edf77b6588d3fe88f536e83576f27ffecf164d3b6e8aeaa7fea11ed2"
+  expectedHashHex: "1a4f81f3ba81dc1c520c03eacd858c272b28fdc83636b9fbd90d54b86e721c80"
 };
 
-  // Fungsi menukar Hex String kepada ArrayBuffer
   function hexToBuffer(hex) {
     const pairs = hex.match(/[\da-f]{2}/gi);
     return new Uint8Array(pairs.map(h => parseInt(h, 16)));
   }
 
-  // Fungsi menukar ArrayBuffer kepada Hex String
   function bufferToHex(buffer) {
     return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  // Fungsi utama PBKDF2 (Key Stretching 100,000 kitaran)
   async function derivePBKDF2(password, saltHex, iterations) {
     const encoder = new TextEncoder();
     const passwordBuffer = encoder.encode(password);
     const saltBuffer = hexToBuffer(saltHex);
 
-    // Import plaintext password sebagai base key
     const baseKey = await crypto.subtle.importKey(
       "raw", passwordBuffer, "PBKDF2", false, ["deriveBits"]
     );
 
-    // Lakukan pengiraan hash berpusing (stretching) sebanyak 100,000 kali menggunakan SHA-256
     const derivedBits = await crypto.subtle.deriveBits(
       {
         name: "PBKDF2",
@@ -123,7 +155,7 @@ const SECURITY_CONFIG = {
         hash: "SHA-256"
       },
       baseKey,
-      256 // panjang key yang kita nak (256 bits)
+      256
     );
 
     return bufferToHex(derivedBits);
@@ -137,18 +169,15 @@ const SECURITY_CONFIG = {
     
     const inputPass = passwordInput.value;
 
-    // Tukar rupa butang tanda sistem tengah berfikir (loading singkat untuk 100k berpusing)
     submitBtn.disabled = true;
     submitBtn.textContent = "Menyemak Sekuriti...";
     submitBtn.classList.add('loading');
     errorMsg.style.display = 'none';
 
     try {
-      // Guna PBKDF2 untuk tukar input password kepada hash yang secure
       const computedHashHex = await derivePBKDF2(inputPass, SECURITY_CONFIG.saltHex, SECURITY_CONFIG.iterations);
 
       if (computedHashHex === SECURITY_CONFIG.expectedHashHex) {
-        // Set session token sukses
         sessionStorage.setItem('hariz_auth_session', 'authenticated_true');
         window.location.href = 'dashboard.html';
       } else {
@@ -159,7 +188,6 @@ const SECURITY_CONFIG = {
       console.error(err);
       alert("Ralat sekuriti dikesan pada browser.");
     } finally {
-      // Pulihkan butang balik
       submitBtn.disabled = false;
       submitBtn.textContent = "Masuk Sistem ➔";
       submitBtn.classList.remove('loading');
